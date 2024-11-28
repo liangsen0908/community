@@ -2,6 +2,7 @@ package com.complain.community.service;
 
 import com.complain.community.dao.UserMapper;
 import com.complain.community.entity.User;
+import com.complain.community.util.CommunityConstant;
 import com.complain.community.util.CommunityUtil;
 import com.complain.community.util.MailClient;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
-public class UserService {
+public class UserService implements CommunityConstant {
 
     @Autowired
     private UserMapper userMapper;
@@ -34,6 +35,7 @@ public class UserService {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
+
     public User findUserById(int id) {
         return userMapper.selectById(id);
     }
@@ -47,22 +49,22 @@ public class UserService {
             throw new IllegalArgumentException("参数不能为空");
         }
         if (StringUtils.isBlank(user.getUsername())){
-            map.put("usernameMsq","账号不能为空");
+            map.put("usernameMsq","账号不能为空，请输入！");
             return map;
         }
         if (StringUtils.isBlank(user.getPassword())){
-            map.put("passwordMsq","密码不能为空");
+            map.put("passwordMsq","密码不能为空，请输入！");
             return map;
         }
         if (StringUtils.isBlank(user.getEmail())){
-            map.put("emailMsq","邮箱不能为空");
+            map.put("emailMsq","邮箱不能为空，请输入！");
             return map;
         }
 
         //验证账号
         User u = userMapper.selectByName(user.getUsername());
         if (u != null){
-            map.put("usernameMsq","该账号已存在");
+            map.put("usernameMsq","该账号已存在，请重新输入！");
             return map;
         }
 
@@ -70,7 +72,7 @@ public class UserService {
         //验证邮箱
         u = userMapper.selectByEmail(user.getEmail());
         if (u != null){
-            map.put("emailMsq","该邮箱已存在");
+            map.put("emailMsq","该邮箱已存在，请重新输入！");
             return map;
         }
 
@@ -96,6 +98,19 @@ public class UserService {
 
         return map;
     }
+
+    public int activation(int userId,String code){
+        User user = userMapper.selectById(userId);
+        if (user.getStatus() ==1 ){
+            return ACTIVATION_REPEAT;
+        }else if (user.getActivationCode().equals(code)){
+            userMapper.updateStatus(userId,1);
+            return ACTIVATION_SUCCESS;
+        }else {
+            return ACTIVATION_FAILURE;
+        }
+    }
+
 
 
 
