@@ -1,6 +1,8 @@
 package com.complain.community.service;
 
+import com.complain.community.dao.LoginTicketMapper;
 import com.complain.community.dao.UserMapper;
+import com.complain.community.entity.LoginTicket;
 import com.complain.community.entity.User;
 import com.complain.community.util.CommunityConstant;
 import com.complain.community.util.CommunityUtil;
@@ -8,6 +10,7 @@ import com.complain.community.util.MailClient;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.datasource.lookup.MapDataSourceLookup;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
@@ -16,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserService implements CommunityConstant {
@@ -34,6 +38,9 @@ public class UserService implements CommunityConstant {
 
     @Value("${server.servlet.context-path}")
     private String contextPath;
+
+    @Autowired
+    private LoginTicketMapper loginTicketMapper;
 
 
     public User findUserById(int id) {
@@ -111,7 +118,54 @@ public class UserService implements CommunityConstant {
         }
     }
 
+    public Map<String,Object> login(String username, String password,int expiredSeconds){
+       Map<String,Object> map =new HashMap<>();
+       //空值处理
+        if (StringUtils.isBlank(username)){
+            map.put("usernameMsq","账号不能为空，请重新输入！");
+            return map;
+        }
+        if (StringUtils.isBlank(password)) {
+            map.put("passwordMsq", "密码不能为空，请重新输入！");
+            return map;
+        }
+
+        //验证账号
+        User user = userMapper.selectByName(username);
+
+        if(user == null){
+            map.put("usernameMsq","账号不存在，请重新输入！");
+            return map;
+        }
+
+        if(user.getStatus()==0){
+            map.put("usernameMsq","账号未激活，请重新输入！");
+            return map;
+        }
+
+        //验证密码
+        String pd = CommunityUtil.md5(password+user.getSalt());
+        if(!user.getPassword().equals(pd)){
+            map.put("passwordMsq", "密码不正确，请重新输入！");
+            return map;
+        }
+
+        //生成登录凭证
+        LoginTicket loginTicket = new LoginTicket();
+        loginTicket.setUserId(user.getId());
+        loginTicket.setTicket(CommunityUtil.generateUUID());
+        loginTicket.setExpired(new Date(System.currentTimeMillis()+ TimeUnit.SECONDS.toMillis(expiredSeconds)));
+        loginTicket.setStatus(0);
+        loginTicketMapper.insertLoginTicket(loginTicket);
 
 
+        map.put("ticket",loginTicket.getTicket());
+        return map;
+    }
+
+    public void logout(String ticket){
+        loginTicketMapper.updateStatus(ticket,1);
+
+    }
 
 }
