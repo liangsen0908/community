@@ -1,5 +1,6 @@
 package com.complain.community.controller;
 
+import com.complain.community.annotation.LoginRequired;
 import com.complain.community.entity.User;
 import com.complain.community.service.UserService;
 import com.complain.community.util.CommunityUtil;
@@ -42,11 +43,14 @@ public class UserController {
     @Autowired
     private HostHolder hostHolder;
 
+    @LoginRequired
     @RequestMapping(path = "/setting",method = RequestMethod.GET)
     public String getSettingPage(){
         return "/site/setting";
     }
 
+
+    @LoginRequired
     @RequestMapping(path = "/upload",method = RequestMethod.POST)
     public String uploadHeader(MultipartFile headerImage, Model model){
         if(headerImage==null){
@@ -110,6 +114,7 @@ public class UserController {
 
     }
 
+    @LoginRequired
     @RequestMapping(path = "/updatePassword",method = RequestMethod.POST)
     public String updatePassword(String oldPassword,String newPassword, Model model){
         if(oldPassword ==null){
