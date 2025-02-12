@@ -14,3 +14,93 @@
 	max-width: 100%;
 	width: 80%;
 }
+
+
+/* 左右对齐的整体布局 */
+.message-left,
+.message-right {
+	display: flex;
+	align-items: flex-start;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+.message-left {
+	justify-content: flex-start; /* 聊天对象的消息靠左 */
+}
+
+.message-right {
+	justify-content: flex-end; /* 自己的消息靠右 */
+}
+
+/* 消息容器 */
+.message-container {
+	display: flex;
+	align-items: center;
+	max-width: 80%; /* 限制消息框宽度 */
+}
+
+/* 头像样式 */
+.message-avatar img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* 消息内容样式 */
+.message-content {
+	background: #f5f5f5; /* 设置相同的浅灰色背景 */
+	border-radius: 10px;
+	padding: 10px 15px;
+	word-wrap: break-word;
+	font-size: 14px;
+	max-width: 100%; /* 消息框自适应宽度 */
+	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); /* 一致的阴影效果 */
+	color: #333; /* 统一的文本颜色 */
+	display: flex;
+	flex-direction: column;
+}
+
+/* 用户名样式 */
+.message-username {
+	font-size: 14px;
+	font-weight: bold;
+	color: #333;
+	margin-bottom: 8px;
+}
+
+.message-left .message-username {
+	text-align: left; /* 左侧消息的用户名左对齐 */
+}
+
+.message-right .message-username {
+	text-align: right; /* 右侧消息的用户名右对齐 */
+}
+
+/* 时间样式 */
+.message-time {
+	font-size: 12px;
+	color: #aaa; /* 灰色时间 */
+	margin-top: 5px;
+}
+
+.message-left .message-time {
+	text-align: left; /* 左侧消息的时间左对齐 */
+}
+
+.message-right .message-time {
+	text-align: right; /* 右侧消息的时间右对齐 */
+}
+
+/* 调整右侧头像间距 */
+.message-right .message-avatar {
+	margin-left: 10px;
+}
+
+/* 调整左侧头像间距 */
+.message-left .message-avatar {
+	margin-right: 10px;
+}
+
+
