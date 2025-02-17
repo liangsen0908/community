@@ -4,7 +4,10 @@ package com.complain.community.dao;
 import com.complain.community.entity.LoginTicket;
 import org.apache.ibatis.annotations.*;
 
+
+// 有更好的选择：redis，这个不用了
 @Mapper
+@Deprecated
 public interface LoginTicketMapper {
 
     @Insert({

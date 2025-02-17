@@ -14,6 +14,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Date;
 
+
+/*
+LoginTicketInterceptor 是一个 Spring 拦截器，
+用于在请求生命周期中检查用户登录状态，
+并将用户信息存入 HostHolder，
+以便后续请求可以访问登录用户
+*/
 @Component
 public class LoginTicketInterceptor implements HandlerInterceptor {
 
