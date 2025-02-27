@@ -10,7 +10,7 @@ public class Message {
     private String content;
 
     //1：是已读
-    //0:是未读
+    //0: 是未读
     private int status;
     private Date createTime;
 

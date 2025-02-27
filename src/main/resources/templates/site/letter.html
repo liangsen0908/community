@@ -24,10 +24,13 @@
 					<ul class="nav nav-tabs mb-3">
 						<li class="nav-item">
 							<a class="nav-link position-relative active" th:href="@{/letter/list}">
-								朋友私信<span class="badge badge-danger" th:text="${letterUnReadCount}" th:if="${letterUnReadCount!=0}"></span></a>
+								朋友私信<span class="badge badge-danger" th:text="${letterUnReadCount}" th:if="${letterUnReadCount!=0}"></span>
+							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link position-relative" href="notice.html">系统通知<span class="badge badge-danger">27</span></a>
+							<a class="nav-link position-relative" th:href="@{/notice/list}">
+								系统通知<span class="badge badge-danger" th:text="${noticeUnreadCount}" th:if="${noticeUnreadCount!=0}"></span>
+							</a>
 						</li>
 					</ul>
 					<button type="button" class="btn btn-primary btn-sm position-absolute rt-0" data-toggle="modal" data-target="#sendModal">发私信</button>
@@ -96,8 +99,9 @@
 							</div>
 						</div>
 					</li>
-
 				</ul>
+
+
 				<!-- 分页 -->
 				<nav class="mt-5" th:replace="index::pagination">
 
