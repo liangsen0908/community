@@ -7,6 +7,7 @@ import com.complain.community.service.DiscussPostService;
 import com.complain.community.service.LikeService;
 import com.complain.community.service.UserService;
 import com.complain.community.util.CommunityConstant;
+import org.apache.kafka.common.protocol.types.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,6 +61,12 @@ public class HomeController implements CommunityConstant {
     @RequestMapping(path = "/error", method = RequestMethod.GET)
     public String getErrorPage() {
         return "/error/500";
+    }
+
+
+    @RequestMapping(path = "/denied", method = RequestMethod.GET)
+    public String getDeniedPage(){
+        return "/error/404";
     }
 
 

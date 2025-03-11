@@ -93,8 +93,11 @@ public class MessageController implements CommunityConstant {
         // 私信目标
         model.addAttribute("target", getLetterTarget(conversationId));
 
+
         // 设置已读
         List<Integer> ids = getLetterIds(letterList);
+
+
         if (!ids.isEmpty()) {
             messageService.readMessage(ids);
         }
@@ -120,7 +123,10 @@ public class MessageController implements CommunityConstant {
         List<Integer>ids = new ArrayList<>();
         if (letterList !=null){
             for (Message message:letterList){
-                if(hostHolder.getUser().getId()==message.getToId() && message.getStatus()==0){
+
+                System.out.println(message);
+
+                if(hostHolder.getUser().getId() == message.getToId() && message.getStatus()==0){
                     ids.add(message.getId());
                 }
             }
@@ -254,6 +260,7 @@ public class MessageController implements CommunityConstant {
         page.setRows(messageService.findNoticeCount(user.getId(), topic));
 
         List<Message> noticeList = messageService.findNotices(user.getId(), topic, page.getOffset(), page.getLimit());
+
         List<Map<String, Object>> noticeVoList = new ArrayList<>();
         if (noticeList != null) {
             for (Message notice : noticeList) {

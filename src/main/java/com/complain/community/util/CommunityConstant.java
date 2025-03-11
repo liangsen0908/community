@@ -16,6 +16,7 @@ public interface CommunityConstant {
 
     // 实体类型：帖子
     int ENTITY_TYPE_POST =1;
+
     // 实体类型：评论
     int ENTITY_TYPE_COMMENT=2;
 
@@ -38,10 +39,35 @@ public interface CommunityConstant {
      * */
     String TOPIC_COMMENT = "comment";
 
+    /*
+    * 主题：发帖
+    * */
+    String TOPIC_PUBLISH= "publish";
+
 
     /*
     * 系统用户ID
     * */
 
     int SYSTEM_USER_ID = 1;
+
+
+
+    /*
+    * 权限：普通用户
+    * */
+    String AUTHORITY_ADMIN = "ROLE_ADMIN";
+
+    /*
+    * 权限：普通用户
+    * */
+    String AUTHORITY_USER = "ROLE_USER";
+
+    /*
+    * 权限：版主
+    * */
+    String AUTHORITY_MODERATOR="ROLE_MODERTOR";
+
+
+
 }

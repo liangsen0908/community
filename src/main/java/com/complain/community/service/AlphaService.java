@@ -6,8 +6,7 @@ import com.complain.community.dao.UserMapper;
 import com.complain.community.entity.DiscussPost;
 import com.complain.community.entity.User;
 import com.complain.community.util.CommunityUtil;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -22,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.swing.plaf.ComponentUI;
 import java.util.Date;
 

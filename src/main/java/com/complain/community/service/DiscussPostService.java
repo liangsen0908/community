@@ -3,7 +3,7 @@ package com.complain.community.service;
 import com.complain.community.dao.DiscussPostMapper;
 import com.complain.community.entity.DiscussPost;
 import com.complain.community.util.SensitiveFilter;
-import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
@@ -49,7 +49,7 @@ public class DiscussPostService {
 
 
     public int updateCommentCount(int id,int commentCount){
-        return discussPostMapper.uodateCommentCount(id,commentCount);
+        return discussPostMapper.updateCommentCount(id,commentCount);
     }
 
 }

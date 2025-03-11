@@ -1,10 +1,8 @@
 package com.complain.community.controller;
 
 
-import com.complain.community.entity.Comment;
-import com.complain.community.entity.DiscussPost;
-import com.complain.community.entity.Page;
-import com.complain.community.entity.User;
+import com.complain.community.entity.*;
+import com.complain.community.event.EventProducer;
 import com.complain.community.service.CommentService;
 import com.complain.community.service.DiscussPostService;
 import com.complain.community.service.LikeService;
@@ -40,6 +38,9 @@ public class DiscussPostController implements CommunityConstant {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private EventProducer eventProducer;
+
     @RequestMapping(path = "/add" ,method = RequestMethod.POST)
     @ResponseBody
     public String addDiscussPost(String title,String content){
@@ -54,6 +55,17 @@ public class DiscussPostController implements CommunityConstant {
         discussPost.setUserId(user.getId());
         discussPost.setCreateTime(new Date());
         discussPostService.addDiscussPost(discussPost);
+
+        //触发发帖事件
+        Event event = new Event()
+                .setTopic(TOPIC_PUBLISH)
+                .setUserId(user.getId())
+                .setEntityType(ENTITY_TYPE_POST)
+                .setEntityId(discussPost.getId());
+
+        eventProducer.fireEvent(event);
+
+
 
         return CommunityUtil.getJSONString(0,"发布成功");
     }
@@ -134,6 +146,7 @@ public class DiscussPostController implements CommunityConstant {
                 }
                 commentVo.put("replys",replyVoList);
                 int replyCount = commentService.findCommentCount(ENTITY_TYPE_COMMENT, comment.getId());
+
                 commentVo.put("replyCount",replyCount);
                 commentVoList.add(commentVo);
             }

@@ -6,17 +6,16 @@ import com.complain.community.util.CommunityConstant;
 import com.complain.community.util.CommunityUtil;
 import com.complain.community.util.RedisKeyUtil;
 import com.google.code.kaptcha.Producer;
-import jakarta.servlet.ServletOutputStream;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -74,19 +77,18 @@ public class LoginController implements CommunityConstant {
     }
 
     @RequestMapping(path = "/login",method = RequestMethod.POST)
-    public String Login(String username,String password,String code,boolean rememberme,
-                        Model model,HttpSession session,HttpServletResponse response,
+    public String Login(String username, String password, String code, boolean rememberme,
+                        Model model, HttpSession session, HttpServletResponse response,
                         @CookieValue(value = "kaptchaOwner",required = false) String kaptchaOwner){
 
         //检查验证码
         //String kaptcha = (String) session.getAttribute("kaptcha");
         String kaptcha = null;
-        System.out.println(kaptchaOwner);
+
         if (StringUtils.isNotBlank(kaptchaOwner)){
             String redisKey = RedisKeyUtil.getKaptchaKey(kaptchaOwner);
             kaptcha = (String) redisTemplate.opsForValue().get(redisKey);
         }else {
-            System.out.println(kaptchaOwner);
             model.addAttribute("codeMsq","验证码失效，刷新后重试！");
             return "/site/login";
         }
@@ -104,6 +106,7 @@ public class LoginController implements CommunityConstant {
             cookie.setMaxAge(expiredSecondes);
             response.addCookie(cookie);
             return "redirect:/index";
+
         }else {
             model.addAttribute("usernameMsq",map.get("usernameMsq"));
             model.addAttribute("passwordMsq",map.get("passwordMsq"));
@@ -114,6 +117,15 @@ public class LoginController implements CommunityConstant {
     @RequestMapping(path = "/logout",method = RequestMethod.GET)
     public String logout(@CookieValue("ticket") String ticket){
         userService.logout(ticket);
+        /*
+        *  为什么不需要手动清理？
+        * Spring Security 的自动清理机制
+        * Spring Security 默认会在每个请求结束时（即 FilterChain 执行完毕后）自动清理 SecurityContext，无需手动干预。
+        * 手动调用 SecurityContextHolder.clearContext() 可能会导致以下问题：
+        * 重定向时认证信息丢失 ：在返回 redirect:/login 时，新的请求可能无法正确继承已清理的上下文。
+        * 干扰框架逻辑 ：Spring Security 的 LogoutFilter 会处理认证清理（如使 Session 失效），手动清理可能引发冲突。
+        * */
+        // SecurityContextHolder.clearContext();
         return "redirect:/login";
     }
 

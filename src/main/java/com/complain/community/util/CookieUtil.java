@@ -1,10 +1,11 @@
 package com.complain.community.util;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 public class CookieUtil {
-    public static String getValue(HttpServletRequest request,String name){
+    public static String getValue(HttpServletRequest request, String name){
         if(request == null || name==null){
             throw new IllegalArgumentException("参数为空");
         }
