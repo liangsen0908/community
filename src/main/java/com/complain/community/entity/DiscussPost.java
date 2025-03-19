@@ -20,11 +20,11 @@ public class DiscussPost {
     @Field(type = FieldType.Text,analyzer = "ik_max_word",searchAnalyzer = "ik_smart")
     private String content;
 
-    // 是否置顶
+    // 是否置顶 1：置顶
     @Field(type = FieldType.Integer)
     private int type;
 
-    //是否精华
+    //是否精华 1:加精华
     @Field(type = FieldType.Integer)
     private int status;
 
